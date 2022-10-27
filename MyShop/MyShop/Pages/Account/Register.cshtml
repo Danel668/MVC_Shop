@@ -1,0 +1,29 @@
+﻿@page
+@model MyShop.Pages.Account.RegisterModel
+@{
+}
+
+<div class="columns">
+    <div class="column"></div>
+    <div class="column">
+        <form method="post" class="box">
+            <div class="field">
+                <label class="label">Name</label>
+                <div class="control">
+                    <input asp-for="RegisterViewModel.UserName" class="input"  placeholder="Name">
+                    <span class="help is-danger" asp-validation-for="RegisterViewModel.UserName"></span>
+                </div>
+            </div>
+
+            <div class="field">
+                <label class="label">Password</label>
+                <div class="control">
+                    <input asp-for="RegisterViewModel.Password" class="input" type="password" placeholder="********">
+                    <span class="help is-danger" asp-validation-for="RegisterViewModel.Password"></span>
+                </div>
+            </div>
+            <button class="button is-primary">Sign up</button>
+        </form>
+    </div>
+    <div class="column"></div>
+</div>

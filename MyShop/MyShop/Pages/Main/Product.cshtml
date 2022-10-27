@@ -1,0 +1,230 @@
+﻿@page "{name}"
+@model MyShop.Pages.Main.ProducttModel
+@{
+    var image_path = $"/Image/{Model.Product.Image}";
+}
+
+
+<div id="app">
+    <div class="hero">
+        <div class="hero-body">
+            <div class="container">
+                <div class="columns">
+                    <div class="column is-6">
+                        <figure class="image">
+                            <img src="@image_path" alt="Placeholder image">
+                        </figure>
+                    </div>
+                    <div class="column is-6">
+                        <section class="content">
+                             <p class="title">@Model.Product.Name</p>
+                             <p class="subtitle">@Model.Product.Description</p>
+                            <p>
+
+                            </p>
+                            <footer>
+                                <div class="field is-horizontal">
+                                    <div class="field-label is-normal">
+                                        <label class="label">Size</label>
+                                    </div>
+                                    <div class="field-body">
+                                        <div class="field is-narrow">
+                                            <div class="control">
+                                                <div class="select is-fullwidth">
+                                                    <select @@change="checkQty" v-model.number="getStockViewModel.size">
+                                                        <option value="0">S</option>
+                                                        <option value="1">M</option>
+                                                        <option value="2">L</option>
+                                                        <option value="3">XL</option>
+                                                        <option value="4">XXL</option>
+                                                        <option value="5">XXXL</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="field is-horizontal">
+                                    <div class="field-label is-normal">
+                                        <label class="label">Color</label>
+                                    </div>
+                                    <div class="field-body">
+                                        <div class="field is-narrow">
+                                            <div class="control">
+                                                <div class="select is-fullwidth">
+                                                    <select @@change="checkQty" v-model.number="getStockViewModel.color">
+                                                        <option value="0">White</option>
+                                                        <option value="1">Black</option>
+                                                        <option value="2">Blue</option>
+                                                        <option value="3">Green</option>
+                                                        <option value="4">Red</option>
+                                                        <option value="5">Yellow</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                    
+                                <div class="field is-horizontal">
+                                    <div class="field-label is-normal">
+                                        <label class="label">Qty:</label> 
+                                    </div>
+                                    <div class="field-body">
+                                        <div class="field is-narrow">
+                                            <div class="control">
+                                                <input @@change="checkQty" v-model.number="cartViewModel.qty" class="input"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div v-if="er" class="field is-horizontal">
+                                    <div class="field-label is-normal">
+                                        <label class="label"></label> 
+                                    </div>
+                                    <div class="field-body">
+                                        <div class="field is-narrow">
+                                            <div class="control">
+                                                <span class="has-text-danger is-size-8">{{er}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div v-if="success" class="field is-horizontal">
+                                    <div class="field-label is-normal">
+                                        <label class="label"></label> 
+                                    </div>
+                                    <div class="field-body">
+                                        <div class="field is-narrow">
+                                            <div class="control">
+                                                <span class="has-text-success is-size-8">{{success}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="field is-horizontal">
+                                    <div class="field-label is-normal">
+                                    </div>
+                                    <div class="field-body">
+                                        <div class="field is-narrow">
+                                            <div v-if="er" class="control">
+                                                <button class="button is-success" disabled type="submit">Submit</button>
+                                            </div>
+                                            <div v-else class="control">
+                                                <button @@click="addToCart();checkQty()" class="button is-success" type="submit">Submit</button>
+                                            </div>
+                                        </div>
+                                        <div v-if="success" class="field is-narrow">
+                                            <div class="control">
+                                                <a asp-page="/Main/Cart" class="button is-warning" type="button">Go to Cart</a>
+                                            </div>
+                                        </div>
+                                        <div class="field is-narrow">
+                                            <div class="control">
+                                                <a asp-page="/Main/Main" class="button is-light" type="button">Continue Shopping</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </footer>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+@section scripts{
+     <script>
+        var app = new Vue({
+            el: '#app',
+            data: {
+                loading: false,
+                image: "@Model.Product.Image",
+                er: null,
+                success: null,
+                getStockViewModel: {
+                    productId: @Model.Product.Id,
+                    size: 0,
+                    color: 0,
+                },
+                cartViewModel: {
+                    stockId: 0,
+                    qty: 1,
+                },
+                
+                
+            },
+            mounted() {
+                this.checkQty();
+            },
+            methods: {
+                checkQty() {
+                    this.loading = true;
+                    this.success = null;
+                    axios.post("/Home/GetStockId", this.getStockViewModel)
+                        .then(res => {
+                            console.log(res);
+                            this.cartViewModel.stockId = res.data;
+                         })
+                        .catch(err => {
+                            console.log(err);
+                        })
+                        .then(() => {
+                            axios.post("/Home/CheckQty", this.cartViewModel)
+                                .then(res => {
+                                        console.log(res);
+                                        var flag = res.data;
+                                        if (flag == false) {
+                                            this.er = "Недостаточно товара";
+                                        }
+                                        else{
+                                            this.er = null;
+                                        }
+                                })
+                                .catch(err => {
+                                    console.log(err);
+                                })
+                                .then(() => {
+                                    this.loading = false;
+                                }); 
+                        });
+                },
+                addToCart() {
+                    this.loading = true;
+                    axios.post("/Home/AddToCart", {StockId: this.cartViewModel.stockId, Qty: this.cartViewModel.qty, Color: this.getStockViewModel.color, Size: this.getStockViewModel.size, Image: this.image})
+                        .then(res => {
+                            console.log(res);
+                            this.success = "Товар добавлен в корзину";
+                        })
+                        .catch(err => {
+                            console.log(err);
+                        })
+                        .then(() => {
+                            this.loading = false;
+                        });
+                },
+                //getInitialStockId() {
+                //        this.loading = true;
+                //        axios.post("/Home/GetStockId", this.getStockViewModel)
+                //        .then(res => {
+                //            console.log(res);
+                //            this.cartViewModel.stockId = res.data;
+                //        })
+                //        .catch(err => {
+                //            console.log(err);
+                //        })
+                //        .then(() => {
+                //            this.loading = false;
+                //        }); 
+                //},
+            },
+        })
+     </script>
+    
+}

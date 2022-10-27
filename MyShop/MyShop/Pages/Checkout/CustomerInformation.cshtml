@@ -1,0 +1,94 @@
+﻿@page
+@model MyShop.Pages.Checkout.CustomerInformationModel
+@{
+}
+
+
+<div class="columns">
+    <div class="column is-6">
+        <form method="post">
+            <div class="field">
+                <p class="control">
+                    <label class="label">FirstName</label>
+                    <input class="input" asp-for="CustomerInformation.FirstName" />
+                </p>
+                <span class="help is-danger" asp-validation-for="CustomerInformation.FirstName"></span>
+            </div>
+            <div class="field">
+                <p class="control">
+                    <label class="label">LastName</label>
+                    <input class="input" asp-for="CustomerInformation.LastName" />
+                </p>
+                 <span class="help is-danger" asp-validation-for="CustomerInformation.LastName"></span>
+            </div>
+            <div class="field">
+                <p class="control">
+                    <label class="label">PhoneNumber</label>
+                    <input class="input" asp-for="CustomerInformation.PhoneNumber" />
+                </p>
+                <span class="help is-danger" asp-validation-for="CustomerInformation.PhoneNumber"></span>
+            </div>
+            <div class="field">
+                <p class="control">
+                    <label class="label">Email</label>
+                    <input class="input" asp-for="CustomerInformation.Email" />
+                </p>
+                 <span class="help is-danger" asp-validation-for="CustomerInformation.Email"></span>
+            </div>
+            <div class="field">
+                <p class="control">
+                    <label class="label">Address1</label>
+                    <input class="input" asp-for="CustomerInformation.Address1" />
+                </p>
+                <span class="help is-danger" asp-validation-for="CustomerInformation.Address1"></span>
+            </div>
+            <div class="field">
+                <p class="control">
+                    <label class="label">Address2</label>
+                    <input class="input" asp-for="CustomerInformation.Address2" />
+                </p>
+                <span class="help is-danger" asp-validation-for="CustomerInformation.Address2"></span>
+            </div>
+            <div class="field">
+                <p class="control">
+                    <label class="label">City</label>
+                    <input class="input" asp-for="CustomerInformation.City" />
+                </p>
+                <span class="help is-danger" asp-validation-for="CustomerInformation.City"></span>
+            </div>
+            <div class="field">
+                <p class="control">
+                    <label class="label">PostCode</label>
+                    <input class="input" asp-for="CustomerInformation.PostCode" />
+                </p>
+                <span class="help is-danger" asp-validation-for="CustomerInformation.PostCode"></span>
+            </div>
+            <div class="field">
+                <button class="button is-success" type="submit">Submit</button>
+            </div>
+        </form>
+    </div>
+     <div class="column is-6">
+       <table class="table is-fullwidth">
+           <thead>
+               <tr>
+                   <th>Name</th>
+                   <th>Size</th>
+                   <th>Color</th>
+                   <th>Qty</th>
+               </tr>
+           </thead>
+           <tbody>
+                @foreach (var product in Model.Cart)
+                {
+                    <tr>
+                        <td>@product.Name</td>
+                        <td>@product.Size</td>
+                        <td>@product.Color</td>
+                        <td>@product.Qty</td>
+                    </tr>
+                }
+           </tbody>
+       </table>
+    </div>
+</div>

@@ -1,0 +1,101 @@
+﻿@page
+@model MyShop.Pages.Admin.StockModel
+@{
+}
+
+
+<div id="app">
+    <div class="columns">
+        <div class="column is-3">
+            <table class="table is-hoverable">
+                <tr v-for="(product, index) in products" @@click="selectProduct(product)">
+                    <td v-bind:class="{'is-success': status === index}" @@click="status = index" class="subtitle">{{product.shortDescription}}</td>
+                </tr>
+            </table>
+        </div>
+        <div class="column is-6" v-if="selectedProduct">
+             <p v-if="errorsUpd.length">
+                <ul>
+                    <li class="has-text-danger-dark" v-for="error in errorsUpd">{{ error }}</li>
+                </ul>
+            </p>
+            <table class="table">
+                <tr>
+                    <td class="subtitle">Quantity</td>
+                    <td class="subtitle">Color</td>
+                    <td class="subtitle">Size</td>
+                </tr>
+                <tr v-for="(stock, index) in selectedProduct.stock">
+                    <td><input type="number" class="input" v-model.number="stock.qty"/></td>
+                    <td>
+                        <select class="input" v-model.number="stock.color">
+                            <option value="0">White</option>
+                            <option value="1">Black</option>
+                            <option value="2">Blue</option>
+                            <option value="3">Green</option>
+                            <option value="4">Red</option>
+                            <option value="5">Yellow</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select class="input" v-model.number="stock.size">
+                            <option value="0">S</option>
+                            <option value="1">M</option>
+                            <option value="2">L</option>
+                            <option value="3">XL</option>
+                            <option value="4">XXL</option>
+                            <option value="5">XXXL</option>
+                        </select>
+                    </td>
+                    <td><a class="has-text-danger" @@click="deleteStock(stock.id, index)">Delete</a></td>
+                </tr>
+            </table>
+            <a class="button is-warning" @@click="updateStock">  
+                Update Products
+            </a>
+        </div>
+        <div class="column is-3" v-if="selectedProduct">
+            <h2 class="title">New Stock</h2>
+             <p v-if="errorsNew.length">
+                <ul>
+                    <li class="has-text-danger-dark" v-for="error in errorsNew">{{ error }}</li>
+                </ul>
+            </p>
+            <div class="field">
+                <div class="control">
+                    <input type="number" class="input" v-model.number="newStock.qty"/>
+                </div>
+            </div>
+            <div class="field">
+                <div class="control">
+                    <select class="select input" v-model.number="newStock.color">
+                        <option value="0">White</option>
+                        <option value="1">Black</option>
+                        <option value="2">Blue</option>
+                        <option value="3">Green</option>
+                        <option value="4">Red</option>
+                        <option value="5">Yellow</option>
+                    </select>
+                </div>
+            </div>
+            <div class="field">
+                <div class="control">
+                    <select class="select input" v-model.number="newStock.size">
+                        <option value="0">S</option>
+                        <option value="1">M</option>
+                        <option value="2">L</option>
+                        <option value="3">XL</option>
+                        <option value="4">XXL</option>
+                        <option value="5">XXXL</option>
+                    </select>
+                </div>
+            </div>
+            <a class="button is-success" @@click="addStock">Add</a>
+        </div>
+    </div>
+</div>
+
+
+@section scripts {
+     <script src="~/js/admin/stock.js"></script>
+}

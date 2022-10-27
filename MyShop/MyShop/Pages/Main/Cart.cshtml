@@ -1,0 +1,59 @@
+﻿@page
+@model MyShop.Pages.Main.CartModel
+@{
+}
+
+<div  id="app" class="section">
+    <div class="container">
+        <div class="columns">
+            <div class="column is-8 is-offset-2">
+                @foreach (var product in Model.Cart)
+                {
+                    var image_path = $"/Image/{product.Image}";
+                    <div class="level" id="product-@product.StockId">
+                        <div class="level-item">
+                            <figure class="image is-128x128">
+                                 <img src="@image_path" alt="Placeholder image">
+                            </figure>
+                        </div>
+                        <div class="level-item">
+                                <div class="columns is-gapless is-multiline has-text-centered">
+                                <div class="column is-12 title">@product.Name</div>
+                                <div class="column is-6">@product.Size</div>
+                                <div class="column is-6">@product.Color</div>
+                            </div>
+                        </div>
+                        <div class="level-item">
+                            <div class="columns has-text-centered is-gapless is-mobile is-multiline">
+                                <div class="column is-4">
+                                        <button class="button" type="button" @@click="removeOneFromCart(@product.StockId, @product.RealPrice)">-</button>
+                                </div>
+                                <div class="column is-4 align-self-center has-text-centered" id="@product.StockId">
+                                    @product.Qty
+                                </div>
+                                <div class="column">
+                                    <button class="button is-4" @@click="getAllQty(@product.AllQty);addOneToCart(@product.StockId, @product.RealPrice)" type="button">+</button>
+                                </div>
+                                <div class="column is-12">
+                                    <a class="has-text-danger" @@click="removeAllFromCart(@product.StockId)">Remove</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="level-item">
+                            <p>$<span id="price-@product.StockId">@(product.RealPrice * product.Qty)</span></p>
+                        </div>
+                    </div>
+                }
+                <div class="has-text-right">
+                    <a class="button is-text" asp-page="/Main/Main">Сontinue shopping</a>
+                    <a asp-page="/Checkout/CustomerInformation" class="button is-success">Checkout</a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+     <script src="~/js/cart/cart.js"></script>
+}

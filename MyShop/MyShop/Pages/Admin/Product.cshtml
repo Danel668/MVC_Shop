@@ -1,0 +1,85 @@
+﻿@page
+@model MyShop.Pages.Admin.ProductModel
+@{
+}
+
+<div id="app" class="container">
+    <div v-if="!editing" >
+        <button class="button" @@click="newProduct">Add New Product</button>
+        <table class="table">
+            <tr>
+                <th>Id</th>
+                <th>Product</th>
+                <th>Price</th>
+            </tr>
+            <tr v-for="(product, index) in products">
+                <td>{{product.id}}</td>
+                <td>{{product.name}}</td>
+                <td>{{product.price}}</td>
+                <td><a @@click="editProduct(product.id, index)">Edit</a></td>
+                <td><a @@click="deleteProduct(product.id, index)">Remove</a></td>
+            </tr>
+        </table>
+    </div>
+
+    <div v-else>
+        <p v-if="errors.length">
+            <ul>
+                <li class="has-text-danger-dark" v-for="error in errors">{{ error }}</li>
+            </ul>
+        </p>
+        <div class="field">
+            <label class="label">Product Name</label>
+            <div class="control">
+                <input class="input" v-model="productModel.name"/>
+            </div>
+        </div>
+         <div class="field">
+            <label class="label">Product Category</label>
+            <div class="control">
+                <input class="input" v-model="productModel.category"/>
+            </div>
+        </div>
+         <div class="field">
+            <label class="label">Short Description</label>
+            <div class="control">
+                <input class="input" v-model="productModel.shortDescription"/>
+            </div>
+        </div>
+        <div class="field">
+            <label class="label">Product Description</label>
+            <div class="control">
+                <input class="input" v-model="productModel.description"/>
+            </div>
+        </div>
+        <div class="field">
+            <label class="label">Product Price</label>
+            <div class="control">
+                <input class="input" type="number" v-model.number="productModel.price"/>
+            </div>
+        </div>
+        <div v-if="productModel.currentImage" class="field">
+            <label class="label">Change Product Image</label>
+            <div class="control">
+                <input type="file" class="input" id="file" ref="file" v-on:change="handleFileUpload()"/>
+            </div>
+        </div>
+        <div v-else class="field">
+            <label class="label">Product Image</label>
+            <div class="control">
+                <input type="file" class="input" id="file" ref="file" v-on:change="handleFileUpload()"/>
+            </div>
+        </div>
+        <button class="button is-success" v-if="!productModel.id" @@click="createProduct">Create Product</button>
+        <button class="button is-success" v-else @@click="updateProduct">Update Product</button>
+        <button class="button" @@click="cancel">Cancel</button>
+    </div>
+</div>
+
+
+
+
+
+@section scripts{
+     <script src="~/js/admin/product.js"></script>
+}
